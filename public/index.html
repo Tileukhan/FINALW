@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Simplified: Use Bootstrap for Carousel -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Football Club Players</h1>
+    <div id="playersContainer"></div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('playersContainer');
+    try {
+        const response = await fetch('/players');
+        const players = await response.json();
+        players.forEach(player => {
+            const playerBlock = document.createElement('div');
+            playerBlock.className = 'player-block';
+            // Simplification: Display local names and descriptions only
+            playerBlock.innerHTML = `
+                <h2>${player.names.localName}</h2>
+                <p>${player.descriptions.localDescription}</p>
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        ${player.pictures.map((pic, index) => `
+                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                            <img src="${pic}" class="d-block w-100" alt="...">
+                        </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            container.appendChild(playerBlock);
+        });
+    } catch (error) {
+        console.error('Failed to load players:', error);
+    }
+});
+
+    </script>
+</body>
+</html>

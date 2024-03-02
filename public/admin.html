@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <form id="addPlayerForm" action="/players" method="post">
+        <h1>Admin Panel</h1>
+        <input type="text" placeholder="Local Name" name="localName" required>
+        <input type="text" placeholder="International Name" name="internationalName" required>
+        <textarea placeholder="Local Description" name="localDescription" required></textarea>
+        <textarea placeholder="International Description" name="internationalDescription" required></textarea>
+        <!-- Simplification: Add URLs for pictures -->
+        <input type="text" placeholder="Picture URL 1" name="picture1" required>
+        <input type="text" placeholder="Picture URL 2" name="picture2" required>
+        <input type="text" placeholder="Picture URL 3" name="picture3" required>
+        <button type="submit">Add Player</button>
+    </form>
+    <script>
+        document.getElementById('addPlayerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = {
+        names: {
+            localName: this.localName.value,
+            internationalName: this.internationalName.value,
+        },
+        descriptions: {
+            localDescription: this.localDescription.value,
+            internationalDescription: this.internationalDescription.value,
+        },
+        pictures: [this.picture1.value, this.picture2.value, this.picture3.value]
+    };
+
+    try {
+        const response = await fetch('/players', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            alert('Player added successfully!');
+            this.reset(); // Reset form fields
+        } else {
+            alert('Failed to add player.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred.');
+    }
+});
+
+    </script>
+</body>
+</html>
